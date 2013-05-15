@@ -12,6 +12,7 @@ One of the challenges of [i]Emjoinal[/i] is to define the structure and semantic
 
 Emoji (the word translate to “picture letter”) takes the idea of the emoticon, e.g. smiley face :), the heart <3 and brings it to a web 2.0 realization: full color, detailed, animated and visually comprehensive. With the introduction of things like iOS6, emoji is not only a standard but the languages fluency has expanded as it starts to become native to many operating systems. It becomes a natural progression as artist with both visual and computer science backgrounds we decided to develop a Turing complete language using emoji. 
 
+For example, writing 'hello world' can be parsed in emoji as: :wave: :earth_americas: 
 
 
 goals in progress
