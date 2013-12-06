@@ -1,0 +1,33 @@
+
+## Built-In Keywords ##
+
+
+_lbkt__rbkt _   :flushed:
+_lbrace__rbrace_
+_dot_
+dup
+drop
+truthy
+not
+over
+swap
+get
+_plus_
+_dash_
+_star_
+_slash_
+or
+and
+_eq_
+_lt_
+_gt_
+_if_
+doif
+_while_
+repeat
+dowhile
+map
+each
+rot
+set
+_new_
