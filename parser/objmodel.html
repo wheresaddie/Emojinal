@@ -1,0 +1,95 @@
+<html>
+<head>
+  <title>Snipe</title>
+  <script type="text/javascript">
+    /*
+      Snipe Object Model
+      Ramsey Nasser, October 8 2013
+      On a plane to New York
+    */
+
+    // square = { x * x }
+    // square x:9
+    // 
+    // var math = new Snipe.Scope()
+    // math.bindLabel("square", new Snipe.Scope());
+    // math.getLabel("square").bindLabel("_parent", math);
+    // math.getLabel("square").bindLabel("value", function() { return this.getLabel("x") * this.getLabel("x") });
+    // math.getLabel("square").merge(new Snipe.Scope({x:9})).getLabel("value")
+    var Snipe = {
+      Scope: function(obj) {
+        if(typeof obj === 'undefined') obj = {}
+        this._labels = obj
+        this.bindLabel("_parent", Snipe.Lobby);
+      },
+
+      UnboundLabelError: function(label) {
+        this.label = label;
+        this.toString = function() { return "Snipe.UnboundLabelError: Unbound label '" + label + "'" };
+      }
+    }
+
+    Snipe.UnboundLabelError.prototype = Error;
+    // TODO incomplete, thunks only reveals first unbound label
+    Snipe.Scope.prototype.toString = function(label, value) {
+      var _this = this;
+      return "{" + Object.keys(this._labels).filter(function(k) {
+        return k[0] != "_";
+
+      }).map(function(k) {
+        var v;
+        try {
+          v = _this.getLabel(k)
+        } catch(e) {
+          v = "?" + e.label;
+        }
+        return k + "=" + v
+
+      }).join(",") + "}"
+    }
+
+    Snipe.Scope.prototype.bindLabel = function(label, value) {
+      this._labels[label] = value;
+    }
+
+    Snipe.Scope.prototype.unbindLabel = function(label, value) {
+      delete this._labels[label];
+    }
+
+    Snipe.Scope.prototype.getLabel = function(label) {
+      if(typeof this._labels[label] === 'undefined' && typeof this._labels["_parent"] === 'undefined') {
+        // no label and no parent, unbound error
+        throw new Snipe.UnboundLabelError(label)
+
+      } else if(typeof this._labels[label] === 'undefined' && typeof this._labels["_parent"] === 'object') {
+        // no label, but parent, check parent
+        return this.getLabel("_parent").getLabel(label);
+
+      } else if(typeof this._labels[label] === 'function') {
+        // label is a thunk, execute it
+        return this._labels[label].call(this);
+
+      } else {
+        // label is a value, return it
+        return this._labels[label];
+      }
+    }
+
+    Snipe.Scope.prototype.merge = function(other) {
+      var r = new Snipe.Scope()
+      for (var k in this._labels) { r._labels[k] = this._labels[k]; }
+      if(typeof other._labels === 'undefined')
+        for (var k in other) { r._labels[k] = other[k]; }
+      else
+        for (var k in other._labels) { r._labels[k] = other._labels[k]; }
+      return r;
+    }
+
+    Snipe.Lobby = new Snipe.Scope()
+    Snipe.Lobby.unbindLabel("_parent")
+  </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+square = { x * x }
+square x:12 --> 144
+
+square = { x * x }
+result = square x:12
+
+square = { x * x }
+result = square { x=12 }
+
+square = { multiply a=x b=x }
+result = square { x=12 }
+
+square = { value = (multiply a=x b=x) }
+result = ( square { x=12 } ) value
+
+square = { value = [multiply a=x b=x] }
+result = [[square x=12] value]
+
+labels
+literals
+assignment
+  generic infix?
+  operators add:'* order:5 scope:{ lhs multiply:rhs }
+scopes
+  object+function
+calls
+  send scope to scope
+
+
+
+
+VALUES are bound to LABELS
+name = 'ramsey
+name --> "ramsey"
+
+LABEL binding with = is LAZY and has low PRECEDENCE
+x = doesnt + exist --> ?doesnt?exist
+x --> Error: unbound label 'doesnt'
+
+LABEL binding with : is EAGER and has high PRECEDENCE
+x : doesnt + exist --> Error: unbound label 'doesnt'
+
+a SCOPE contains LABELS
+{ name = 'ramsey } --> {name:"ramsey"}
+
+SCOPES can be MERGED
+{ name = 'ramsey } + { job = 'hacker } --> {name:"ramsey",job:"hacker"}
+
+a SCOPE can be QUERIED for the VALUE of its LABELS.
+{ name = 'ramsey } name --> "ramsey"
+
+SCOPES can be bound to a LABEL. This allows for RECORDS.
+me = { name = 'ramsey } --> {name:"ramsey"}
+me name --> "ramsey"
+
+Combining LAZY LABELS and MERGING allows for METHODS
+square = { value = x * x } --> {value:?x}
+square value --> Error: unbound label 'x'
+square + { x:12 } --> {x:12,value:?x}
+(square + { x:12 }) value --> 144
+(square + { x:9 }) value --> 81
+
+This is ALL YOU NEED.
+
+For SUGAR, the last expression in a scope is a binding to the 'value' LABEL
+square = { x * x }
+(square + { x:9 }) value
+
+For SUGAR, the 'value' LABEL query is appended to every expression
+square = { x * x }
+square + { x:9 }
+
+For SUGAR, a SCOPE followed by another SCOPE is treated as a MERGE
+square = { x * x }
+square { x:9 }
+
+For SUGAR, braces can be left off a SCOPE
+square = { x * x }
+square x:9
+
+This is NOT BAD.
+
+fib = { n < 2 if-true:n else:fib:n-1 + fib:n-2 }
+
+asteroid = {
+  init = {
+    not xspeed then: { xspeed = 20 }
+  }
+
+  update = {
+    x = x + xspeed
+    y = y + yspeed
+    r = r + rspeed
+  }
+
+  draw = {
+    canvas line from:x,y to:x+10,y+10
+    canvas line from:x,y to:x-10,y-10
+  }
+}
+
+foo = { x:90 y:80 _parent:asteroid }
+foo draw
+foo update
+

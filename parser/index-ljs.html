@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Snipe</title>
+  <style type="text/css">
+  pre em {
+    color: gray;
+  }
+  </style>
+  <script src="js/peg.js"></script>
+  <script type="text/javascript">
+  function flatten(array){
+    var flat = [];
+    for (var i = 0, l = array.length; i < l; i++){
+      var type = Object.prototype.toString.call(array[i]).split(' ').pop().split(']').shift().toLowerCase();
+      if (type) { flat = flat.concat(/^(array|collection|arguments|object)$/.test(type) ? flatten(array[i]) : array[i]); }
+    }
+    return flat;
+  }
+  String.prototype.hashCode = function(){
+    var hash = 0, i, char;
+    if (this.length == 0) return hash;
+    for (i = 0, l = this.length; i < l; i++) {
+      char  = this.charCodeAt(i);
+      hash  = ((hash<<5)-hash)+char;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(36);
+  };
+
+  window.onload = function() {
+    // var square = function() { return this.x * this.x }
+    // console.log(square.call({x:31}))
+
+    // module = { square = { x * x } }
+    // module square x:20 value
+    var top_level = function() {
+      this.module = function() {
+        var _parent = this;
+        this.offset = this.offset ? this.offset : 6;
+        this.square = function() { this.__proto__ = _parent; return this.offset + this.x * this.x; }
+        this.cube = function() { this.__proto__ = _parent; return this.offset + this.x * this.x * this.x; }
+        return this;
+      }
+
+      return this;
+    }
+
+    var __top = top_level.call({})
+
+    __top['clone'] = __top['module'].call({offset:8});
+    console.log(__top['clone']['cube'].call({x:10}))
+
+    console.log("")
+    console.log("")
+
+    var grammarElement = document.querySelector("#grammar");
+    grammarElement.parentNode.removeChild(grammarElement);
+
+    Snipe = { parser: PEG.buildParser(grammarElement.textContent) }
+
+    var goods = document.querySelectorAll(".good")
+    for (var i = 0; i < goods.length; i++) {
+      var ast = Snipe.parser.parse(goods[i].textContent);
+      var str = JSON.stringify(ast);
+      console.log(ast)
+      goods[i].innerHTML += "\n<em>&rarr; " + str + " = " + str.hashCode() + "</em>";
+    };
+
+  }
+  </script>
+</head>
+<body>
+  <pre id="grammar">
+    start                         = expression
+
+    expression                    = space exp:expression_content space ('\n' / ';' )* space { return exp }
+    terminated_expression         = space exp:expression_content space ('\n' / ';' )+  space { return exp }
+    expression_content            = message_send / infix / literal / paren_expression
+    paren_expression              = '(' exp:expression ')' { return exp }
+
+    message_send                  = '[' r:expression_content mandatory_space m:expression_content ']' { return { receiver:r, message:m } } / 
+                                    '[' r:expression_content mandatory_space m:naked_scope ']' { return { receiver:r, message:m } } 
+
+    literal                       = scope / string / number / label
+
+    scope                         = '{' exps:expression+ last:expression? '}' { exps = exps.concat(last == "" ? [] : [last]); exps.push( { 'return':exps.pop() }); return { scope:exps } } /
+                                    '{' e:expression '}' { return { scope:[{'return':e}] } } /
+                                    '{' space '}' { return { scope:[{'return':null}] } }
+    naked_scope                   = exps:expression+ { exps.push( { 'return':exps.pop() }); return { scope:exps } }
+
+    infix                         = lhs:(literal) space op:operator space rhs:expression_content { return { infix:op, lhs:lhs, rhs:rhs } }
+    operator                      = o:[~`!@#\$%\^*\-+|<>&\?,.\/\\\[\]=:]+ { return o.join('') }
+
+    label                         = l:[a-zA-Z_\-]+ { return { label:l.join('') } }
+
+    string                        = single_quoted_string / double_quoted_string
+    double_quoted_string          = '"' s:[^"]+ '"' { return s.join('') }
+    single_quoted_string          = "'" s:[^ \n;\{\}\(\)]+ { return s.join('') }
+
+    number                        = float_between_01 / float / integer
+    float                         = n:digit+ '.' m:digit+ { return parseFloat( n.join('') + "." + m.join('') )}
+    float_between_01              = '.' n:digit+ { return parseFloat( "0." + n.join('') )}
+    integer                       = n:digit+ { return parseInt(n.join('')) }
+    digit                         = [0123456789]
+
+    space                         = [ ]* { return undefined }
+    mandatory_space               = [ ]+ { return undefined }
+
+    /* send                          = message_send */
+    /* message_send                  = rcv:(paren_expression / scope / literal) mandatory_space msg:(scope / label) { return { receiver:rcv, message:msg } } */
+
+    /* assignment                    = l:label space assignment_operator space e:(paren_expression / assignment / literal) { return { assign:e, to:l } } */
+    /* assignment_operator           = ':' / '=' */
+  </pre>
+
+  <pre class="good">20</pre>
+  <pre class="good">.75</pre>
+  <pre class="good">42.13</pre>
+  <pre class="good">"double quote"</pre>
+  <pre class="good">'single</pre>
+  <pre class="good">label</pre>
+  <pre class="good">hyphenated-label</pre>
+  <pre class="good">infix: 1</pre>
+  <pre class="good">30 = 50</pre>
+  <pre class="good">complex ?::= operators</pre>
+  <pre class="good">subtract - labels</pre>
+  <pre class="good">{ 'scope }</pre>
+  <pre class="good">{ 'scope; }</pre>
+  <pre class="good">{ }</pre>
+  <pre class="good">{ a=1; b=1 }</pre>
+  <pre class="good">{ a=1; b=1; }</pre>
+  <pre class="good">{ scope-as:"record"; name='ramsey; age=26; job='hacker }</pre>
+  <pre class="good">{ multi: line
+  name = 'ramsey
+  age  = 26
+  job  = 'hacker }</pre>
+  <pre class="good">square = { x * x }</pre>
+  <pre class="good">{ sub-scope: { name = 'nested } }</pre>
+  <pre class="good">{ sub-scope: { name = 'nested } }</pre>
+  <pre class="good">[draw-point {x:2; y:90}]</pre>
+  <pre class="good">[draw-point {x:2 y:90}]</pre>
+  <pre class="good">[draw-point x:2 y:90]</pre>
+  <pre class="good">[{x:20} x:2 y:90]</pre>
+  <pre class="good">draw-point x:2 y:90</pre>
+</body>
+</html>
