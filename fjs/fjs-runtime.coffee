@@ -107,5 +107,5 @@ class Context
 		if (@curFrame = @frames.pop())
 			@curFrame.stack = stack.concat @curFrame.args, @curFrame.stack
 
-module.exports = new Context
-
+window.FJS ?= {}
+window.FJS.Context = new Context

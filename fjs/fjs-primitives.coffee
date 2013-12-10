@@ -2,8 +2,8 @@
     FJS primitive functions
 ###
 
-module.exports =
-
+window.FJS ?= {}
+window.FJS.Primitives =
 # ------------ PRIMITIVES WITH DEFAULT OF 0 ARGUMENTS --------------
 
 	_lbkt__rbkt_: (args...) ->
@@ -234,6 +234,3 @@ module.exports =
 		argsArr = []
 		for arg, i in args[1..] then argsArr.push 'args[' + i + ']'
 		eval 'new constructor(' + argsArr.join(',') + ')'
-
-
-exports._throw_  = -> throw JSON.stringify @
