@@ -1,0 +1,24 @@
+{
+  "name": "emojinal",
+  "version": "0.1.0",
+  "description": "Concatenative Emoji-based programming language",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nasser/Emojinal.git"
+  },
+  "keywords": [
+    "emoji",
+    "stack",
+    "forth",
+    "programming",
+    "language"
+  ],
+  "author": "Ramsey Nasser, Addie Wagenknecht",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
