@@ -9,22 +9,372 @@ version = '0.1.0'
 debugCompile = no
 debugRuntime = no
 
-fs = require 'fs'
-
-path = process.argv[2]
+path = "(eval)"
 longPad = ''; for i in [0..25] then longPad += '     '
 
 withStmntStack 	= []
 localVarStack   = []
 localVarIdxStk  = []
-callDepth  = -1
+callDepth		= -1
 
 depth 			= 0
 haveDbgInspect 	= no
 
-funcOut = "\n// File #{path} compiled by FJS version #{version} " +
-		  "on #{new Date().toString()[0..20]}\n\n"
-#		  "fjs_keepAlive = setInterval(function(){}, 1e9);\n\n"
+# ew gross, globals, but running with it - nasser
+funcOut = ""
+resetFuncOut = ->
+	funcOut = "\n// File #{path} compiled by FJS version #{version}\n" +
+				"// Hacked by Ramsey Nasser December 2013 for the Emojinal Project\n" +
+			  "// Generated on #{new Date().toString()[0..20]}\n\n"
+resetFuncOut()
+
+########### primitives ############
+
+###
+    FJS primitive functions
+###
+
+window.Primitives =
+
+# ------------ PRIMITIVES WITH DEFAULT OF 0 ARGUMENTS --------------
+
+	_lbkt__rbkt_: (args...) ->
+		if @overrideDefault
+			[args]
+		else
+			[[]]
+
+	_lbrace__rbrace_: (args...) ->
+		if @overrideDefault
+			obj = {}
+			i = 0
+			while i < args.length - 1
+				obj[args[i].toString()] = args[i+1]
+				i += 2
+			obj
+		else
+			{}
+
+
+# ------------ PRIMITIVES WITH DEFAULT OF 1 ARGUMENT --------------
+
+	_dot_: (args...) ->
+		if @overrideDefault
+			console.log args...
+		else
+			console.log args[0]
+			args[1..]
+
+	dup: (args...) ->
+		if @overrideDefault
+			args.concat args
+		else
+			args[0..0].concat args
+
+	drop: (args...) ->
+		if @overrideDefault
+			undefined
+		else
+			args[1..]
+
+	truthy: (args...) ->
+		if @overrideDefault
+			for arg, i in args then if not args[i] then return false
+			true
+		else
+			[ not not args[0] ].concat args[1..]
+
+	not: (args...) ->
+		if @overrideDefault
+			for arg, i in args then args[i] = not args[i]
+			args
+		else
+			[ not args[0] ].concat args[1..]
+
+# ------------ PRIMITIVES WITH DEFAULT OF 2 ARGUMENTS --------------
+
+	# dups second or last arg onto stack top
+	over: (args...) ->
+		if @overrideDefault
+			args[-1..-1].concat args
+		else
+			args[1..1].concat args
+
+	# opposite of rot when more than 2 args
+	swap: (args...) ->
+		if @overrideDefault
+			args[1..-1].concat args[0..0]
+		else
+			[args[1], args[0]]
+
+	get: (args...) ->
+		obj = args[0]
+		if @overrideDefault
+			res = []
+			for args in args[1..]
+				res.push obj[ arg ]
+			res
+		else
+			obj[ args[1] ]
+
+	_plus_: (args...) ->
+		if @overrideDefault
+			haveStr = no
+			for arg in args then if typeof arg is 'string' then haveStr = yes; break
+			total = (if haveStr then '' else 0)
+			for arg in args then total += arg
+			total
+		else
+#			console.log '_plus_ def', args, [ args[0] + args[1] ]
+			if args.length < 2 then args
+			else [ args[0] + args[1] ].concat args[2..]
+
+	# negate if args.length is 1
+	# else replace all args below top with top - arg
+	_dash_: (args...) ->
+		if @overrideDefault and args.length > 2
+			total = +args[0]
+			for arg in args[1..] then total -= arg
+			total
+		else
+			if args.length < 2 then args
+			else [ args[0] - args[1] ].concat args[2..]
+
+	_star_: (args...) ->
+		if @overrideDefault and args.length > 2
+			total = +args[0]
+			for arg, i in args[1..] then total *= arg
+			total
+		else
+			if args.length < 2 then args
+			else [ args[0] * args[1] ].concat args[2..]
+
+	_slash_: (args...) ->
+		if @overrideDefault and args.length > 2
+			total = +args[0]
+			for arg in args[1..] then total /= arg
+			total
+		else
+			if args.length < 2 then args
+			else [ args[0] / args[1] ].concat args[2..]
+
+	or: (args...) ->
+		if @overrideDefault
+			for arg, i in args then if args[i] then return true
+			false
+		else
+			if args.length < 2 then args
+			else [ args[0] || args[1] ].concat args[2..]
+
+	and: (args...) ->
+		if @overrideDefault
+			for arg, i in args then if not args[i] then return false
+			true
+		else
+			if args.length < 2 then args
+			else [ args[0] && args[1] ].concat args[2..]
+
+	# checks if all or top two args are equal
+	_eq_: (args...) ->
+		if @overrideDefault
+			top = args[0]
+			for arg, i in args[1..] then if top isnt arg then return false
+			true
+		else
+			if args.length < 2 then true
+			else [ args[0] is args[1] ].concat args[2..]
+
+	_lt_: (args...) ->
+		if @overrideDefault
+			for arg, i in args[1..] then if arg[i-1] >= arg then return false
+			true
+		else
+			if args.length < 2 then false
+			else [ args[0] < args[1] ].concat args[2..]
+
+	_gt_: (args...) ->
+		if @overrideDefault
+			for arg, i in args[1..] then if arg[i-1] <= arg then return false
+			true
+		else
+			if args.length < 2 then false
+			else [ args[0] > args[1] ].concat args[2..]
+
+	_if_: (args...) ->
+		console.log '_if_', args
+		if typeof args[0] is 'function' and args[0].call @ or args[0]
+			args[1].apply @, args[2..]
+		undefined
+
+	doif: (args...) ->
+		if typeof args[1] is 'function' and args[1].call @ or args[1]
+			args[0].apply @, args[2..]
+		undefined
+
+	_while_: (args...) ->
+		while args[0].call @ then args[1].apply @, args[2..]
+		undefined
+
+	repeat: (args...) ->
+		loop
+			args[0].apply @, args[1..]
+			if @pop() is false then break
+		undefined
+
+	dowhile: (args...) ->
+		while args[1].call @ then args[0].apply @, args[2..]
+		undefined
+
+	map: (args...) ->
+		res = []
+		for item in args[1]
+			args[0].call @, item
+			res.push @pop()
+		[res]
+
+	each: (args...) ->
+		res = []
+		for item in args[1]
+			args[0].call @, item
+			if (resItem = @pop()) is false then break
+			res.push resItem
+		[res]
+
+# ------------ PRIMITIVES WITH DEFAULT OF 3 ARGUMENTS --------------
+	rot: (args...) ->
+		if @overrideDefault
+			args[-1..-1].concat args[0..-2]
+		else
+			args[2..2].concat args[0..1], args[3..]
+
+	set: (args...) ->
+		obj = args[0]
+		if @overrideDefault
+			i = 0
+			while i < args.length - 1
+				obj[args[i]] = args[i+1]
+				i += 2
+			res
+		else
+			obj[ args[1] ] = args[2]
+
+
+# ------------ PRIMITIVES WITH DEFAULT OF ALL ARGUMENTS --------------
+
+	_new_: (args...) ->
+		constructor = args[0]
+		argsArr = []
+		for arg, i in args[1..] then argsArr.push 'args[' + i + ']'
+		eval 'new constructor(' + argsArr.join(',') + ')'
+
+
+
+########### runtime ############
+
+# a fjs function (@codeFuncSegs array) invocation
+# includes execution ptr (@segIdx) and datastack (@stack)
+class Frame
+	constructor: ( @codeFuncSegs, @segIdx = 0, @stack = [], @args = [] ) ->
+
+	clone: -> new Frame @codeFuncSegs, @segIdx, @stack.slice 0, @args.slice 0
+
+# execution engine
+class Context
+
+	constructor: (@curFrame = null) ->
+		@frames = []
+		@callbacksPending = 0
+
+	clone: ->
+		newCtxt = new Context @curFrame.clone()
+
+	stack: -> @curFrame.stack
+
+	moveArgsToStack: (n) ->
+		if not (frame2 = @frames[-1..-1][0]) then return
+		if not n
+			@curFrame.stack = frame2.args.concat @curFrame.stack
+			frame2.args = []
+		else
+			@curFrame.stack = frame2.args.splice(0, n).concat @curFrame.stack
+
+	setArgs: (args) -> @curFrame.args = Array.prototype.slice.call args
+
+	pop: -> @curFrame.stack.shift()
+
+	popAll: -> stk = @curFrame.stack; @curFrame.stack = []; stk
+
+	popN: (n) ->
+		n or= @curFrame.stack.length
+		@curFrame.stack.splice 0, n
+
+	push: (v) -> @curFrame.stack.unshift v
+
+	new: (Class, args) ->
+		(->
+			construct = -> Class.apply this, args
+			construct.prototype = Class.prototype
+			new construct
+		)()
+
+	pushArray: (array) -> @curFrame.stack = array.concat @curFrame.stack
+
+	pushReturnValue: (val) ->
+		if typeof val is 'undefined' then return
+		if val instanceof Array
+#			console.log 'pushReturnValue Array', val
+			@pushArray val
+		else if toString.call(val) is '[object Arguments]'
+			@pushArray Array.prototype.slice call val
+		else @curFrame.stack.unshift val
+
+	pushArgsAndExec: (f, n = @curFrame.stack.length) ->
+		@overrideDefault = true
+		@pushReturnValue f.apply @, @curFrame.stack.splice 0, n
+		delete @overrideDefault
+
+	execOrPush: (word) ->
+		if typeof word is 'function'
+			stk = @curFrame.stack
+			@curFrame.stack = []
+#			console.log 'execOrPush function', stk
+			@pushReturnValue word.apply @, stk
+		else
+			@push word
+
+	pushCB: (debugFunc) ->
+		@curFrame.stack.unshift @_callback.bind @, debugFunc
+		@callbacksPending++
+
+	_callback: (debugFunc, args...) ->
+		if --@callbacksPending > 0 then return
+		ctxt = (if @callbacksPending is 0 then @ else ctxt = @savedCtxt)
+		@savedCtxt = ctxt.clone()
+		ctxt.curFrame.stack = args.concat ctxt.curFrame.stack
+		if debugFunc
+			console.log()
+			debugFunc.call ctxt, '<callback>'
+		ctxt._run()
+
+	funcCall: (debugFunc, segments) ->
+		@frames.push @curFrame
+		@curFrame = new Frame segments
+		if debugFunc then debugFunc.call @, '('
+		@_run()
+
+	_run: (args) ->
+		@curFrame.codeFuncSegs[@curFrame.segIdx++]?.call @
+
+	wait: ->
+		if @callbacksPending < 1 then @_run()
+		# else ends js tick execution until next cb
+
+	funcReturn: ->
+		stack = @curFrame.stack
+		if (@curFrame = @frames.pop())
+			@curFrame.stack = stack.concat @curFrame.args, @curFrame.stack
+
+window.Context = new Context
 
 ########### compile function ############
 
@@ -431,12 +781,11 @@ decodeSymbol = (str) ->
 		str = str.replace regex, char
 	str
 
+window.FJS ?= {}
+window.FJS.compile = (src) ->
+	resetFuncOut()
+	compileFunc "with:Primitives\n\n" + src, "Context"
+	funcOut
 
-########################## EXECUTE COMPILER ###########################
-
-src = "with:fjs-primitives  fjs-primitives=  require './fjs-primitives'\n\n" +
-	  	fs.readFileSync(path + '.fjs').toString()
-
-compileFunc src, "require('./fjs-runtime')"
-
-fs.writeFile path + '.js', funcOut
+window.FJS.execute = (src) ->
+	window.eval @compile(src)
