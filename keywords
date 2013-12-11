@@ -30,3 +30,10 @@ each U+1F6B2
 rot U+1F6AC
 set U+1F344
 _new_  	U+1F423
+
+
+## Examples ##
+
+( . ":wave: :earth_americas:" )                   // creates and runs function, prints "hello world"
+printGreeting= :( . ":wave: :earth_americas:" )   // creates function and assigns it to a variable
+printGreeting                         // runs function, prints ":wave: :earth_americas:"
