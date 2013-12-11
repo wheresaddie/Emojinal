@@ -1,0 +1,27 @@
+##Named Variables##
+
+:shit: = :sparkling_hearts:     // assign :sparkling_hearts: to variable :shit:
+. :shit:                       // prints ":sparkling_hearts:" emoji for variable :shit:
+
+
+
+##Functions##
+
+( . ":waves: :earth_asia:" )                   // creates and runs function, prints "hello world"
+printGreeting= :( . ":waves: :earth_asia:" )   // creates function and assigns it to variable
+printGreeting                                 // runs function, prints "hello world" (:waves: :earth_asia:) emoji
+
+
+
+##Word Modifers##
+
+. :shit: :shit: :hamster: :mushroom:               // prints ":mushroom:"
+. :snake: :shit: :shit: :hamster: :mushroom:      // prints ":shit:"
+.  :goat:.:sun:                                  // prints ":wink:"
+. :goat:.:sun:                                  // prints "[:goat:: :sun:]"
+.  ( + :mushroom: :rose: )                       // prints ":sunflower:"
+. :snake:( :hamster: :mushroom: :rose: )        // prints "[:goat:]"
+
+
+// Note: I picked flowers/fungi for numbers, all functions and mathmatical symbols I picked animals for (example: :hamster: is equals)
+
