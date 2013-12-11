@@ -1,0 +1,34 @@
+<html>
+<head>
+  <title>💭💻😎</title>
+  <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
+  <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
+  <script type="text/javascript" src="fjs/fjs.js"></script>
+  <script type="text/javascript" src="emojinal/peg.js"></script>
+  <script type="text/javascript" src="emojinal/parser.js"></script>
+  <style type="text/css">
+    textarea {
+      width: 100%;
+      height: 90%;
+      font-size: 3em;
+    }
+
+    button {
+      width: 100%;
+      height: 9%;
+      margin-top: 7px;
+    }
+  </style>
+  <script type="text/javascript">
+  function runCode() {
+    var emojinalSource = document.querySelector('textarea').value;
+    var fjsSource = Emojinal.compile(emojinalSource);
+    FJS.execute(fjsSource);
+  }
+  </script>
+</head>
+<body>
+  <textarea></textarea>
+  <button onclick="runCode()">Run</button>
+</body>
+</html>
