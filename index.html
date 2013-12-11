@@ -4,6 +4,8 @@
   <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
   <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
   <script type="text/javascript" src="fjs/fjs.js"></script>
+  <script type="text/javascript" src="emojinal/peg.js"></script>
+  <script type="text/javascript" src="emojinal/parser.js"></script>
   <style type="text/css">
     textarea {
       width: 100%;
@@ -19,7 +21,9 @@
   </style>
   <script type="text/javascript">
   function runCode() {
-    FJS.execute(document.querySelector('textarea').value);
+    var emojinalSource = document.querySelector('textarea').value;
+    var fjsSource = Emojinal.compile(emojinalSource);
+    FJS.execute(fjsSource);
   }
   </script>
 </head>
