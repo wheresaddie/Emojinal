@@ -17,11 +17,45 @@ printGreeting                                 // runs function, prints "hello wo
 
 . :shit: :shit: :hamster: :mushroom:               // prints ":mushroom:"
 . :snake: :shit: :shit: :hamster: :mushroom:      // prints ":shit:"
-.  :goat:.:sun:                                  // prints ":wink:"
-. :goat:.:sun:                                  // prints "[:goat:: :sun:]"
-.  ( + :mushroom: :rose: )                       // prints ":sunflower:"
+.  :goat: :frog: :sun:                                  // prints ":wink:"
+. :goat: :frog: :sun:                                  // prints "[:goat:: :sun:]"
+.  ( :hamster: :mushroom: :rose: )                       // prints ":sunflower:"
 . :snake:( :hamster: :mushroom: :rose: )        // prints "[:goat:]"
 
 
-// Note: I picked flowers/fungi for numbers, all functions and mathmatical symbols I picked animals for (example: :hamster: is equals)
+// Note: I picked flowers/fungi for numbers (mushroom = 1, rose = 2, sunflower 3), , all functions, modifers
+//and mathmatical symbols I picked animals for (example: :hamster: is equals, where :snake: is colan and :frog: a period)
+
+:frog: :mushroom: :rose: :sunflower:           // pops one item and prints ":mushroom:"
+:frog: :octopus: :mushroom: :rose: :sunflower:               // empties stack and prints ":mushroom: :rose: :sunflower:"
+:frog::mushroom: :rose: :sunflower: :octopus: :rose:  :mushroom: :rose: :sunflower:   // pops two items and prints " :mushroom: :rose: "
+
+
+
+##HTTP Server## 
+
+//because, fuck yes.
+
+// var = whale
+// http = sparkles
+// require = pill
+// ; = moneybag
+// Server = blush
+
+:whale: :sparkles: :hamster: :pill: :snake: :sparkles :snake: :moneybag:
+:spakeles::hamster::diamond::cat::frog: :taxi: :diamond: :rose: :pill: :rose: :moneybag:
+res.writeHead(200, {'Content-Type': 'text/plain'});
+  sparkles:snakr: :gun: :dimaond: :cat: :waves: :asia_world: :snake: :moneybag:
+:moneybag::pill: :ear: :smile: :mushroom: :sunflower: :sunflower: :leaf: :frog: :mushroom: :rose: :leaf: :frog: :rose: :frog :snake: :moneybag:
+//('Server running at http://127.0.0.1:1337/');
+
+:blush: :snake: :pill: :sparkles :snake: 
+:broken: :snake: :ear: :pill: :cry: :mushroom: :sunflower: :sunflower: :leaf: :snake: :rose: :leaf: :sunflower: :frog: :leaf: :snake:
+// dup drop wait . 'Server running at http://127.0.0.1:1337/'
+ :snake: :gun: :pill: :waves: :asia_world: :snake: :moneybag:
+ 
+
+
+
+
 
