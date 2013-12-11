@@ -17,9 +17,14 @@
       margin-top: 7px;
     }
   </style>
+  <script type="text/javascript">
+  function runCode() {
+    FJS.execute(document.querySelector('textarea').value);
+  }
+  </script>
 </head>
 <body>
   <textarea></textarea>
-  <button>Run</button>
+  <button onclick="runCode()">Run</button>
 </body>
 </html>
