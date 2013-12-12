@@ -9,19 +9,33 @@
 
     textarea {
       position: absolute;
-      left: 0;
+      top: 5px;
+      left: 5px;
       width: 49%;
       height: 90%;
       font-size: 3em;
+      border: none;
+      background: red;
     }
 
     button {
+      font-size: 2.9em;
       position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 9%;
-      margin-top: 7px;
+      width: 60px;
+      height: 60px;
+      bottom: 5px;
+      border: none;
+      background: none;
     }
+
+    button#run {
+      left: 5px;
+    }
+
+    button#refresh {
+      left: 75px;
+    }
+
   </style>
   <script type="text/javascript">
   function runCode() {
@@ -32,17 +46,30 @@
 </head>
 <body>
   <canvas></canvas>
-  <textarea></textarea>
-  <button onclick="runCode()">Run</button>
+  <textarea>🎨🔄 🌜 
+  🎨◻ 0⃣ 0⃣ ↔ ↕
+  🎨💄 2⃣5⃣5⃣ 8⃣
+  ⌚➡ ◀ ➡
+  ⌚⬆ ◀ ⬆
+  🎨✒ ➡ ⬆ ⌚➡ ⌚⬆
+  ➡ ◀ ➕ 🎲 ➡
+  ⬆ ◀ ➕ 🎲 ⬆ 
+🌛 
+⌚➡ ◀ ➡ 
+⌚⬆ ◀ ⬆ 
+➡ ◀ ➗ ↔ 2⃣ 
+⬆ ◀ ➗ ↕ 2⃣</textarea>
+  <button id="run" onclick="runCode()">☑</button>
+  <button id="refresh" onclick="refresh()">♻</button>
 
   <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
-  <script type="text/javascript" src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1-api.min.js"></script>
 
   <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
   <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
   <script type="text/javascript" src="fjs/fjs.js"></script>
   <script type="text/javascript" src="emojinal/peg.js"></script>
   <script type="text/javascript" src="emojinal/parser.js"></script>
+  <script type="text/javascript" src="emojinal/processing-1.4.1-api.min.js"></script>
   <script type="text/javascript" src="emojinal/graphics.js"></script>
 </body>
 </html>
