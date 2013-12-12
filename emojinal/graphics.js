@@ -17,6 +17,8 @@ Graphics.signedRandom = function() {
 Emojinal.lookupTable["🎨✒"] = "Graphics.line<4"
 Emojinal.lookupTable["🎨✏"] = "Graphics.text<3"
 Emojinal.lookupTable["🎨⚪"] = "Graphics.ellipse<4"
+Emojinal.lookupTable["🎨◻"] = "Graphics.rect<4"
+Emojinal.lookupTable["🎨💄"] = "Graphics.fill"
 Emojinal.lookupTable["🎨🚿"] = "Graphics.background"
 Emojinal.lookupTable["🎨🔄"] = "Graphics.emojinalDraw"
 
