@@ -14,6 +14,11 @@ Graphics.signedRandom = function() {
   return Graphics.random(-1, 1);
 }
 
+// To expose a new Processing funciton, copy one of these lines,
+// replace the emoji with your own and the Graphics string with a
+// Processing function name. You shouldn't have to add <3 or <4,
+// but if you run into problems try adding < and the number of
+// arguments the function expects
 Emojinal.lookupTable["🎨✒"] = "Graphics.line<4"
 Emojinal.lookupTable["🎨✏"] = "Graphics.text<3"
 Emojinal.lookupTable["🎨⚪"] = "Graphics.ellipse<4"

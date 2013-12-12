@@ -39,6 +39,7 @@ window.Emojinal.parser = PEG.buildParser "
   mandatory_space = [\\n ]+ { return undefined }
   "
 
+# add more emoji mappings here
 window.Emojinal.lookupTable =
   "◀" : "=",
   "👍" : "true",
@@ -47,7 +48,7 @@ window.Emojinal.lookupTable =
   "➗" : "/",
   "➕" : "+",
   "➖" : "-",
-  # truthy
+  # truthy is missing
   "💻" : ".",
   "❗" : "not",
   "⬇" : "drop",
@@ -61,7 +62,7 @@ window.Emojinal.lookupTable =
   "🔻" : "<",
   "🔟" : "10",
   "💯" : "100"
-  # get
+  # get is missing
 
 window.Emojinal.names =
   "😄" : "smiling_face_with_open_mouth_and_smiling_eyes",
