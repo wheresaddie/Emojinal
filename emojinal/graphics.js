@@ -28,5 +28,4 @@ Emojinal.lookupTable["🎲"] = "Graphics.signedRandom<0"
 Emojinal.lookupTable["↔"] = "Graphics.width"
 Emojinal.lookupTable["↕"] = "Graphics.height"
 
-
 Emojinal.suffix += "🎨🚿 2⃣5⃣5⃣"
