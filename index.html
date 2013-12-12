@@ -1,19 +1,23 @@
 <html>
 <head>
   <title>💭💻😎</title>
-  <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
-  <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
-  <script type="text/javascript" src="fjs/fjs.js"></script>
-  <script type="text/javascript" src="emojinal/peg.js"></script>
-  <script type="text/javascript" src="emojinal/parser.js"></script>
   <style type="text/css">
+    canvas {
+      position: absolute;
+      right: 0;
+    }
+
     textarea {
-      width: 100%;
+      position: absolute;
+      left: 0;
+      width: 49%;
       height: 90%;
       font-size: 3em;
     }
 
     button {
+      position: absolute;
+      bottom: 0;
       width: 100%;
       height: 9%;
       margin-top: 7px;
@@ -22,13 +26,23 @@
   <script type="text/javascript">
   function runCode() {
     var emojinalSource = document.querySelector('textarea').value;
-    var fjsSource = Emojinal.compile(emojinalSource);
-    FJS.execute(fjsSource);
+    Emojinal.execute(emojinalSource)
   }
   </script>
 </head>
 <body>
+  <canvas></canvas>
   <textarea></textarea>
   <button onclick="runCode()">Run</button>
+
+  <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
+  <script type="text/javascript" src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1-api.min.js"></script>
+
+  <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
+  <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
+  <script type="text/javascript" src="fjs/fjs.js"></script>
+  <script type="text/javascript" src="emojinal/peg.js"></script>
+  <script type="text/javascript" src="emojinal/parser.js"></script>
+  <script type="text/javascript" src="emojinal/graphics.js"></script>
 </body>
 </html>
