@@ -6,7 +6,12 @@ Graphics.size(600, 600)
 Graphics.background(255);
 
 Graphics.emojinalDraw = function(fn) {
-  setInterval(fn, 100);
+  Graphics.draw = fn
+  Graphics.loop()
+}
+
+Graphics.signedRandom = function() {
+  return Graphics.random(-1, 1);
 }
 
 Emojinal.lookupTable["🎨✒"] = "Graphics.line<4"
