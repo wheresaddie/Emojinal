@@ -21,8 +21,7 @@ Emojinal.lookupTable["🎨🚿"] = "Graphics.background"
 Emojinal.lookupTable["🎨🔄"] = "Graphics.emojinalDraw"
 
 Emojinal.lookupTable["⌚"] = "Graphics.millis"
-Emojinal.lookupTable["🎲"] = "Graphics.random<0"
-
+Emojinal.lookupTable["🎲"] = "Graphics.signedRandom<0"
 
 Emojinal.lookupTable["↔"] = "Graphics.width"
 Emojinal.lookupTable["↕"] = "Graphics.height"
