@@ -183,7 +183,7 @@ compileFunc = (funcSrc, pfx) ->
 
 		depth++
 
-		out '(', 'this.setArgs(arguments);'
+		# out '(', 'this.setArgs(arguments);'
 
 		if (m = /^:?\((.*)\)<?(\d+)?$/.exec src) then src = m[1]
 
@@ -437,7 +437,7 @@ window.FJS ?= {}
 window.FJS.compile = (src) ->
 	resetFuncOut()
 	compileFunc "with:FJS.Primitives\n\n" + src, "FJS.Context"
-	funcOut
+	funcOut.replace /this\./g, "FJS.Context."
 
 window.FJS.execute = (src) ->
 	window.eval @compile(src)

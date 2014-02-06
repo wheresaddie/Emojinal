@@ -1,34 +1,130 @@
 <html>
 <head>
   <title>💭💻😎</title>
-  <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
-  <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
-  <script type="text/javascript" src="fjs/fjs.js"></script>
-  <script type="text/javascript" src="emojinal/peg.js"></script>
-  <script type="text/javascript" src="emojinal/parser.js"></script>
   <style type="text/css">
+    body {
+      font-family: "Lucida Grande";
+    }
+
+    canvas {
+      position: absolute;
+      right: 0;
+    }
+
     textarea {
-      width: 100%;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+
+      width: 49%;
       height: 90%;
+
       font-size: 3em;
+      border: none;
+      background: #fffafa;
     }
 
     button {
+      font-size: 2.9em;
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      bottom: 5px;
+      border: none;
+      background: none;
+      font-family: AppleColorEmoji;
+    }
+
+    button#run {
+      left: 5px;
+    }
+
+    button#refresh {
+      left: 75px;
+    }
+
+    button#about {
+      left: 145px;
+    }
+
+    #aboutPane {
+      position: fixed;
+      top: 0;
+      left: 0;
+
+      z-index: 10;
+      background: #fee;
+      opacity: 0.9;
       width: 100%;
-      height: 9%;
-      margin-top: 7px;
+      height: 100%;
+      text-align: center;
+    }
+
+    #aboutPane button {
+      margin: 0 auto;
+    }
+
+    #aboutPane h1 {
+      margin-top: 300px;
     }
   </style>
   <script type="text/javascript">
   function runCode() {
     var emojinalSource = document.querySelector('textarea').value;
-    var fjsSource = Emojinal.compile(emojinalSource);
-    FJS.execute(fjsSource);
+    Emojinal.execute(emojinalSource)
+  }
+
+  function refresh () {
+    document.querySelector('textarea').value = "🎨🔄 🌜 \n\
+  🎨◻ 0⃣ 0⃣ ↔ ↕\n\
+  🎨🚿💄 2⃣5⃣5⃣ 8⃣\n\
+  ⌚➡ ◀ ➡\n\
+  ⌚⬆ ◀ ⬆\n\
+  🎨✒ ➡ ⬆ ⌚➡ ⌚⬆\n\
+  ➡ ◀ ➕ 🎲 ➡\n\
+  ⬆ ◀ ➕ 🎲 ⬆ \n\
+🌛 \n\
+⌚➡ ◀ ➡ \n\
+⌚⬆ ◀ ⬆ \n\
+➡ ◀ ➗ ↔ 2⃣ \n\
+⬆ ◀ ➗ ↕ 2⃣"
+  }
+
+  function showAbout () {
+    document.querySelector('#aboutPane').style.display = "block"
+  }
+
+  function hideAbout () {
+    document.querySelector('#aboutPane').style.display = "none"
   }
   </script>
 </head>
 <body>
+  <canvas></canvas>
   <textarea></textarea>
-  <button onclick="runCode()">Run</button>
+
+  <div id="aboutPane" style="display:none;">
+    <h1>The Emojinal Programming Language</h1>
+    <p>A stack based emoji programming language experiment</p>
+    <p>By Ramsey Nasser and Addie Wagenknecht</p>
+    <p><a href="https://github.com/nasser/Emojinal">https://github.com/nasser/Emojinal</a></p>
+    <p>💩😝💩</p>
+    <button onclick="hideAbout()">🚫</button>
+  </div>
+
+  <button id="run" onclick="runCode()">☑</button>
+  <button id="refresh" onclick="refresh()">♻</button>
+  <button id="about" onclick="showAbout()">❓</button>
+
+  <script type="text/javascript" src="fjs/fjs-primitives.js"></script>
+  <script type="text/javascript" src="fjs/fjs-runtime.js"></script>
+  <script type="text/javascript" src="fjs/fjs.js"></script>
+  <script type="text/javascript" src="emojinal/peg.js"></script>
+  <script type="text/javascript" src="emojinal/parser.js"></script>
+  <script type="text/javascript" src="emojinal/processing-1.4.1-api.min.js"></script>
+  <script type="text/javascript" src="emojinal/graphics.js"></script>
+  <script type="text/javascript">
+    refresh();
+  </script>
 </body>
 </html>

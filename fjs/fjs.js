@@ -189,7 +189,6 @@
         out(null, 'this.push( function(){');
       }
       depth++;
-      out('(', 'this.setArgs(arguments);');
       if ((m = /^:?\((.*)\)<?(\d+)?$/.exec(src))) {
         src = m[1];
       }
@@ -488,7 +487,7 @@
   window.FJS.compile = function(src) {
     resetFuncOut();
     compileFunc("with:FJS.Primitives\n\n" + src, "FJS.Context");
-    return funcOut;
+    return funcOut.replace(/this\./g, "FJS.Context.");
   };
 
   window.FJS.execute = function(src) {
