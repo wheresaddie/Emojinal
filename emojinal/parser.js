@@ -32,7 +32,7 @@
   window.Emojinal.lookupTable = {
     "◀": "=",
     "👍": "true",
-    "👎": "true",
+    "👎": "false",
     "✖": "*",
     "➗": "/",
     "➕": "+",
